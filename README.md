@@ -1,4 +1,4 @@
-# n8n-nodes-http-throttled-request
+# @bauer-group/n8n-nodes-http-throttled-request
 
 A custom n8n node that extends the HTTP Request functionality with intelligent rate-limit throttling. The node automatically detects rate-limit responses (429 Too Many Requests, etc.) and waits the appropriate time before retrying, using information from response headers.
 
@@ -13,19 +13,19 @@ A custom n8n node that extends the HTTP Request functionality with intelligent r
 
 ## Installation
 
-### Prerequisites
+### Install via n8n Community Nodes (Recommended)
 
-- Node.js 20+
-- npm 9+
-- n8n instance (self-hosted)
+1. Open your n8n instance
+2. Go to **Settings** > **Community Nodes**
+3. Enter `@bauer-group/n8n-nodes-http-throttled-request` in the **npm Package Name** field
+4. Click **Install**
+5. The node appears immediately in the node panel — no restart required
 
-### Install from npm
+> **Note**: Community Nodes require a self-hosted n8n instance. n8n Cloud does not support community nodes.
 
-```bash
-npm install n8n-nodes-http-throttled-request
-```
+### Manual Installation (Development)
 
-### Install from source
+For local development or environments without Community Nodes support:
 
 1. Clone or download this repository
 2. Build the package:
@@ -38,11 +38,8 @@ npm run build
 3. Link to your n8n installation:
 
 ```bash
-# Navigate to your n8n custom nodes directory
 cd ~/.n8n/nodes
-
-# Link the package
-npm link n8n-nodes-http-throttled-request
+npm link @bauer-group/n8n-nodes-http-throttled-request
 ```
 
 4. Restart your n8n instance
@@ -57,7 +54,7 @@ services:
   n8n:
     image: n8nio/n8n
     volumes:
-      - ./n8n-nodes-http-throttled-request:/home/node/.n8n/nodes/n8n-nodes-http-throttled-request
+      - ./@bauer-group/n8n-nodes-http-throttled-request:/home/node/.n8n/nodes/@bauer-group/n8n-nodes-http-throttled-request
     environment:
       - N8N_CUSTOM_EXTENSIONS=/home/node/.n8n/nodes
 ```
@@ -200,7 +197,7 @@ npm test -- --coverage
 ### Project Structure
 
 ```
-n8n-nodes-http-throttled-request/
+@bauer-group/n8n-nodes-http-throttled-request/
 ├── package.json              # Package configuration
 ├── tsconfig.json             # TypeScript configuration
 ├── README.md                 # This file
