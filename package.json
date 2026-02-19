@@ -10,9 +10,7 @@
   "main": "dist/nodes/HttpRequest/HttpRequestThrottled.node.js",
   "n8n": {
     "nodes": [
-      {
-        "file": "dist/nodes/HttpRequest/HttpRequestThrottled.node.js"
-      }
+      "dist/nodes/HttpRequest/HttpRequestThrottled.node.js"
     ]
   },
   "files": [
