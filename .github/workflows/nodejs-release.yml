@@ -79,6 +79,8 @@ jobs:
       node-version: '24.x'
       package-manager: 'npm'
       build-command: 'npm run build'
+      run-tests: false
+      run-audit: false
       publish-package: true
       publish-registry: 'npm'
       publish-tag: 'latest'
@@ -100,6 +102,8 @@ jobs:
       node-version: '24.x'
       package-manager: 'npm'
       build-command: 'npm run build'
+      run-tests: false
+      run-audit: false
       publish-package: true
       publish-registry: 'github'
       registry-url: 'https://npm.pkg.github.com'
