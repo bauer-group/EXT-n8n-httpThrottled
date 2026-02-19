@@ -81,6 +81,7 @@ jobs:
       build-command: 'npm run build'
       run-tests: false
       run-audit: false
+      upload-artifacts: false
       publish-package: true
       publish-registry: 'npm'
       publish-tag: 'latest'
@@ -104,6 +105,7 @@ jobs:
       build-command: 'npm run build'
       run-tests: false
       run-audit: false
+      upload-artifacts: false
       publish-package: true
       publish-registry: 'github'
       registry-url: 'https://npm.pkg.github.com'
