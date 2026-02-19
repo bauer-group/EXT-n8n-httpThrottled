@@ -1,11 +1,9 @@
-// nodes/HttpRequest/HttpRequestThrottled.node.ts
-
 import {
   IExecuteFunctions,
   INodeExecutionData,
   INodeType,
   INodeTypeDescription,
-  IHttpRequestOptions,    // v2: neues Options-Interface
+  IHttpRequestOptions,
   IDataObject,
   NodeOperationError,
   NodeApiError,
@@ -13,12 +11,8 @@ import {
 
 import { computeWaitMs, applyJitter } from "./throttling";
 
-// ── Hilfsfunktion ─────────────────────────────────────────────────────────────
-
 const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
-
-// ── Node-Klasse ───────────────────────────────────────────────────────────────
 
 export class HttpRequestThrottled implements INodeType {
   description: INodeTypeDescription = {
@@ -26,14 +20,12 @@ export class HttpRequestThrottled implements INodeType {
     displayName: "HTTP Request (Throttled)",
     icon: "fa:at",
     group: ["output"],
-    // v2: Versioned nodes – Array erlaubt mehrere Versionen gleichzeitig
     version: [1, 2, 3],
     defaultVersion: 3,
     subtitle: '={{$parameter["method"] + ": " + $parameter["url"]}}',
     description:
       "Makes an HTTP request and returns the response data (with throttling support)",
-    defaults: { name: "HTTP Request (Throttled)", color: "#2200DD" },
-    // Kompatibel mit n8n v1/v2: String-Literal 'main'
+    defaults: { name: "HTTP Request (Throttled)", color: "#FF8500" },
     inputs: ["main"],
     outputs: ["main"],
     credentials: [
@@ -59,7 +51,7 @@ export class HttpRequestThrottled implements INodeType {
       },
     ],
     properties: [
-      // ── Kern-Properties (minimal, für Shadow-Override vollständig aus Core übernehmen) ──
+      // ── Core properties ──────────────────────────────────────────────────────
       {
         displayName: "Method",
         name: "method",
@@ -147,30 +139,30 @@ export class HttpRequestThrottled implements INodeType {
         typeOptions: { rows: 4 },
       },
 
-      // ── Throttling-Erweiterung ────────────────────────────────────────────────
+      // ── Throttling ─────────────────────────────────────────────────────────────
       {
-        displayName: "Throttling aktivieren",
+        displayName: "Enable Throttling",
         name: "throttlingEnabled",
         type: "boolean",
         default: true,
         description:
-          "Wartet automatisch bei Rate-Limit-Antworten (429 etc.) und wertet Response-Header aus",
+          "Automatically wait and retry on rate-limit responses (429 etc.) using response headers",
         noDataExpression: true,
       },
       {
-        displayName: "Throttling-Einstellungen",
+        displayName: "Throttling Settings",
         name: "throttling",
         type: "collection",
-        placeholder: "Einstellung hinzufügen",
+        placeholder: "Add Setting",
         default: {},
         displayOptions: { show: { throttlingEnabled: [true] } },
         options: [
           {
-            displayName: "HTTP-Codes",
+            displayName: "HTTP Codes",
             name: "throttleCodes",
             type: "multiOptions",
             default: ["429"],
-            description: "Bei diesen HTTP-Statuscodes wird Throttling ausgelöst",
+            description: "HTTP status codes that trigger throttling",
             options: [
               { name: "429 Too Many Requests", value: "429" },
               { name: "503 Service Unavailable", value: "503" },
@@ -178,27 +170,27 @@ export class HttpRequestThrottled implements INodeType {
             ],
           },
           {
-            displayName: "Standard-Wartezeit (ms)",
+            displayName: "Default Wait Time (ms)",
             name: "defaultWaitMs",
             type: "number",
             default: 10_000,
             description:
-              "Wartezeit in Millisekunden, wenn kein passender Response-Header vorhanden ist",
+              "Wait time in milliseconds when no response header provides guidance",
           },
           {
-            displayName: "Zufällige Abweichung (±%)",
+            displayName: "Random Jitter (±%)",
             name: "jitterPercent",
             type: "number",
             default: 25,
             description:
-              "Streut die Wartezeit um ±N%, um Thundering-Herd-Effekte bei parallelen Executions zu vermeiden",
+              "Randomize wait time by ±N% to prevent thundering herd effects across parallel executions",
           },
           {
-            displayName: "Max. Throttle-Versuche",
+            displayName: "Max Throttle Retries",
             name: "maxThrottleTries",
             type: "number",
             default: 10,
-            description: "Maximale Anzahl Throttling-Retries bevor ein Fehler geworfen wird",
+            description: "Maximum number of throttling retries before throwing an error",
           },
         ],
       },
@@ -235,7 +227,7 @@ export class HttpRequestThrottled implements INodeType {
         throttlingParams.maxThrottleTries ?? 10
       );
 
-      // ── Request-Optionen zusammenbauen ──────────────────────────────────────
+      // ── Build request options ────────────────────────────────────────────────
 
       const method = this.getNodeParameter("method", itemIndex, "GET") as string;
       const url = this.getNodeParameter("url", itemIndex) as string;
@@ -250,12 +242,11 @@ export class HttpRequestThrottled implements INodeType {
         false
       ) as boolean;
 
-      // v2: IHttpRequestOptions – kein freies Objekt mehr
       const requestOptions: IHttpRequestOptions = {
         method: method as IHttpRequestOptions["method"],
         url,
-        returnFullResponse: true,   // v2: Gibt { statusCode, headers, body } zurück
-        ignoreHttpStatusErrors: true, // verhindert automatisches Throw bei 4xx/5xx
+        returnFullResponse: true,
+        ignoreHttpStatusErrors: true, // prevent auto-throw on 4xx/5xx so we can handle throttling
         headers: {},
       };
 
@@ -293,13 +284,11 @@ export class HttpRequestThrottled implements INodeType {
         }
       }
 
-      // ── Throttling-Loop ─────────────────────────────────────────────────────
+      // ── Throttling loop ──────────────────────────────────────────────────────
 
       let throttleAttempt = 0;
 
       while (true) {
-        // v2: this.helpers.httpRequest statt this.helpers.request
-        // Authentifizierung über httpRequestWithAuthentication wenn nötig
         const authentication = this.getNodeParameter(
           "authentication",
           itemIndex,
@@ -310,7 +299,7 @@ export class HttpRequestThrottled implements INodeType {
 
         try {
           if (authentication !== "none") {
-            // Credential-Name aus authentication-Option ableiten
+            // Map authentication option to credential name
             const credMap: Record<string, string> = {
               basicAuth: "httpBasicAuth",
               headerAuth: "httpHeaderAuth",
@@ -323,34 +312,32 @@ export class HttpRequestThrottled implements INodeType {
               requestOptions
             ) as typeof response;
           } else {
-            // v2: this.helpers.httpRequest
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             response = await (this.helpers as any).httpRequest(
               requestOptions
             ) as typeof response;
           }
         } catch (err) {
-          // Netzwerkfehler → direkt werfen, nicht throtteln
           if (err instanceof NodeApiError) throw err;
           throw new NodeOperationError(
             this.getNode(),
-            `Netzwerkfehler: ${(err as Error).message}`,
+            `Network error: ${(err as Error).message}`,
             { itemIndex }
           );
         }
 
         const statusStr = String(response.statusCode);
 
-        // ── Throttling-Branch ───────────────────────────────────────────────
-        // KRITISCH: Dieser Branch darf Retry-on-Fail NICHT auslösen.
-        // Deshalb kein throw, sondern manueller Sleep + continue.
+        // ── Throttling branch ──────────────────────────────────────────────
+        // Uses manual sleep + continue instead of throw to avoid triggering
+        // n8n's built-in retry-on-fail mechanism.
         if (throttlingEnabled && throttleCodes.has(statusStr)) {
           throttleAttempt++;
 
           if (throttleAttempt >= maxThrottleTries) {
             throw new NodeOperationError(
               this.getNode(),
-              `Throttling: Maximale Anzahl Versuche (${maxThrottleTries}) erreicht. Letzter Status: ${response.statusCode}`,
+              `Throttling: max retries (${maxThrottleTries}) exceeded. Last status: ${response.statusCode}`,
               { itemIndex }
             );
           }
@@ -362,14 +349,14 @@ export class HttpRequestThrottled implements INodeType {
           const wait = applyJitter(baseWait, jitterPercent);
 
           this.logger.info(
-            `[Throttling] Status ${response.statusCode} – Item ${itemIndex}, Versuch ${throttleAttempt}/${maxThrottleTries}, warte ${Math.round(wait)}ms`
+            `[Throttling] Status ${response.statusCode} – item ${itemIndex}, attempt ${throttleAttempt}/${maxThrottleTries}, waiting ${Math.round(wait)}ms`
           );
 
           await sleep(wait);
-          continue; // Retry – KEIN Retry-on-Fail
+          continue;
         }
 
-        // ── Normaler Fehler (nicht Throttle-Code) ───────────────────────────
+        // ── Non-throttle error ────────────────────────────────────────────
         if (response.statusCode >= 400) {
           const continueOnFail = this.continueOnFail();
           if (continueOnFail) {
@@ -389,7 +376,7 @@ export class HttpRequestThrottled implements INodeType {
           );
         }
 
-        // ── Erfolg ──────────────────────────────────────────────────────────
+        // ── Success ──────────────────────────────────────────────────────────
         const body = response.body;
         const json: IDataObject =
           typeof body === "object" && body !== null
@@ -400,7 +387,7 @@ export class HttpRequestThrottled implements INodeType {
           json,
           pairedItem: { item: itemIndex },
         });
-        break; // Erfolg → Loop verlassen
+        break;
       }
     }
 

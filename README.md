@@ -76,20 +76,18 @@ services:
 | **Authentication** | Options | None | Authentication type (None, Basic Auth, Header Auth, OAuth1, OAuth2) |
 | **Send Headers** | Boolean | false | Enable custom request headers |
 | **Send Body** | Boolean | false | Enable request body |
-| **Throttling aktivieren** | Boolean | true | Enable automatic rate-limit handling |
+| **Enable Throttling** | Boolean | true | Enable automatic rate-limit handling |
 
 ### Throttling Settings
 
-When throttling is enabled, the following settings become available under *Throttling-Einstellungen*:
+When throttling is enabled, the following settings become available under *Throttling Settings*:
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| **HTTP-Codes** | Multi-select | 429 | Status codes that trigger throttling (429, 503, 504) |
-| **Standard-Wartezeit (ms)** | Number | 10000 | Default wait time when no response header provides guidance |
-| **Zufällige Abweichung (±%)** | Number | 25 | Jitter percentage to prevent thundering herd |
-| **Max. Throttle-Versuche** | Number | 10 | Maximum retry attempts before failing |
-
-> Setting names appear in German in the n8n UI as shown above.
+| **HTTP Codes** | Multi-select | 429 | Status codes that trigger throttling (429, 503, 504) |
+| **Default Wait Time (ms)** | Number | 10000 | Wait time when no response header provides guidance |
+| **Random Jitter (±%)** | Number | 25 | Jitter percentage to prevent thundering herd |
+| **Max Throttle Retries** | Number | 10 | Maximum retry attempts before failing |
 
 ## How It Works
 
@@ -111,7 +109,7 @@ The wait time is determined using this priority (highest first):
 | 1 | `Retry-After` (HTTP-Date) | `Retry-After: Wed, 19 Feb 2025 12:00:00 GMT` |
 | 2 | `X-RateLimit-Remaining: 0` + reset timestamp | `X-RateLimit-Reset: 1739966400` |
 | 3 | Reset timestamp alone | `X-RateLimit-Reset: 1739966400` |
-| 4 | Default fallback | Configured *Standard-Wartezeit* |
+| 4 | Default fallback | Configured *Default Wait Time* |
 
 ### Supported Headers
 
@@ -130,7 +128,7 @@ The wait time is determined using this priority (highest first):
 
 ### Basic GET with Throttling
 
-1. Add the **HTTP Request** node to your workflow
+1. Add the **HTTP Request (Throttled)** node to your workflow
 2. Set the URL to your API endpoint
 3. Throttling is enabled by default — configure settings as needed
 4. Execute the workflow
@@ -186,16 +184,16 @@ npm test -- --coverage
 
 ### Throttling not working
 
-1. Verify *Throttling aktivieren* is enabled (default: on)
+1. Verify *Enable Throttling* is enabled (default: on)
 2. Check that the API returns one of the configured HTTP codes
 3. Review n8n execution logs for throttling messages
 
 ### Maximum retries exceeded
 
-If you see `Throttling: Maximale Anzahl Versuche (…) erreicht`:
+If you see `Throttling: max retries (…) exceeded`:
 
-1. Increase *Max. Throttle-Versuche*
-2. Increase *Standard-Wartezeit* to wait longer between retries
+1. Increase *Max Throttle Retries*
+2. Increase *Default Wait Time* to wait longer between retries
 3. Check if the API requires authentication or has other restrictions
 
 ## API Reference

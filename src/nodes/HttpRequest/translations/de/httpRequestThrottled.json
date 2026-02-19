@@ -1,0 +1,77 @@
+{
+	"nodeView": {
+		"displayName": "HTTP-Anfrage (Throttled)"
+	},
+	"header": {
+		"displayName": "HTTP-Anfrage (Throttled)",
+		"description": "Führt eine HTTP-Anfrage aus und gibt die Antwortdaten zurück (mit Throttling-Unterstützung)"
+	},
+	"properties": {
+		"method": {
+			"displayName": "Methode"
+		},
+		"url": {
+			"displayName": "URL"
+		},
+		"authentication": {
+			"displayName": "Authentifizierung",
+			"options": {
+				"none": { "displayName": "Keine" },
+				"basicAuth": { "displayName": "Basic Auth" },
+				"headerAuth": { "displayName": "Header Auth" },
+				"oAuth1": { "displayName": "OAuth1" },
+				"oAuth2": { "displayName": "OAuth2" }
+			}
+		},
+		"sendHeaders": {
+			"displayName": "Header senden"
+		},
+		"headerParameters": {
+			"displayName": "Header-Parameter",
+			"options": {
+				"parameters": {
+					"displayName": "Header",
+					"values": {
+						"name": { "displayName": "Name" },
+						"value": { "displayName": "Wert" }
+					}
+				}
+			}
+		},
+		"sendBody": {
+			"displayName": "Body senden"
+		},
+		"contentType": {
+			"displayName": "Body-Inhaltstyp"
+		},
+		"body": {
+			"displayName": "Body"
+		},
+		"throttlingEnabled": {
+			"displayName": "Throttling aktivieren",
+			"description": "Wartet automatisch bei Rate-Limit-Antworten (429 etc.) und wertet Response-Header aus"
+		},
+		"throttling": {
+			"displayName": "Throttling-Einstellungen",
+			"placeholder": "Einstellung hinzufügen",
+			"options": {
+				"throttleCodes": {
+					"displayName": "HTTP-Codes",
+					"description": "Bei diesen HTTP-Statuscodes wird Throttling ausgelöst"
+				},
+				"defaultWaitMs": {
+					"displayName": "Standard-Wartezeit (ms)",
+					"description": "Wartezeit in Millisekunden, wenn kein passender Response-Header vorhanden ist"
+				},
+				"jitterPercent": {
+					"displayName": "Zufällige Abweichung (±%)",
+					"description": "Streut die Wartezeit um ±N%, um Thundering-Herd-Effekte bei parallelen Executions zu vermeiden"
+				},
+				"maxThrottleTries": {
+					"displayName": "Max. Throttle-Versuche",
+					"description": "Maximale Anzahl Throttling-Retries bevor ein Fehler geworfen wird"
+				}
+			}
+		}
+	}
+}
