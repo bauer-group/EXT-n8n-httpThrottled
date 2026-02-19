@@ -22,9 +22,8 @@ const sleep = (ms: number): Promise<void> =>
 
 export class HttpRequestThrottled implements INodeType {
   description: INodeTypeDescription = {
-    // Exakten Wert aus Core Node V3 übernommen
-    name: "httpRequest",
-    displayName: "HTTP Request",
+    name: "httpRequestThrottled",
+    displayName: "HTTP Request (Throttled)",
     icon: "fa:at",
     group: ["output"],
     // v2: Versioned nodes – Array erlaubt mehrere Versionen gleichzeitig
@@ -33,7 +32,7 @@ export class HttpRequestThrottled implements INodeType {
     subtitle: '={{$parameter["method"] + ": " + $parameter["url"]}}',
     description:
       "Makes an HTTP request and returns the response data (with throttling support)",
-    defaults: { name: "HTTP Request", color: "#2200DD" },
+    defaults: { name: "HTTP Request (Throttled)", color: "#2200DD" },
     // Kompatibel mit n8n v1/v2: String-Literal 'main'
     inputs: ["main"],
     outputs: ["main"],
