@@ -1,6 +1,6 @@
 {
   "name": "@bauer-group/n8n-nodes-http-throttled-request",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "n8n community node with built-in HTTP request throttling (rate limiting)",
   "license": "MIT",
   "repository": {

@@ -1,3 +1,11 @@
+## [0.1.3](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.2...v0.1.3) (2026-02-19)
+
+### 🐛 Bug Fixes
+
+* add missing keywords to package.json ([fc8e9c4](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/fc8e9c4cafcd7c62e354494cb63f6da5f2ad80d6))
+* simplify node file declaration in package.json ([050b408](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/050b408568bbe734cd8db78eb6cb7692bfb53f79))
+* update audit level to 'critical' in CI workflows ([e895d7e](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/e895d7e505141a4d88404bea0ef883767a3064b1))
+
 ## [0.1.2](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.1...v0.1.2) (2026-02-19)
 
 ### 🐛 Bug Fixes
