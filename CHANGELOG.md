@@ -1,3 +1,9 @@
+## [0.3.0](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.2.0...v0.3.0) (2026-02-19)
+
+### 🚀 Features
+
+* add versioning to HttpRequestThrottled node ([779ae54](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/779ae540a53a357553db1d5190c79a865d21367c))
+
 ## [0.2.0](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.5...v0.2.0) (2026-02-19)
 
 ### 🚀 Features
