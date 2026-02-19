@@ -1,3 +1,9 @@
+## [0.1.4](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.3...v0.1.4) (2026-02-19)
+
+### 🐛 Bug Fixes
+
+* update node name and display name for HttpRequestThrottled ([243323b](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/243323b3d1ec2605dfa7e54f957bbccc0bc59075))
+
 ## [0.1.3](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.2...v0.1.3) (2026-02-19)
 
 ### 🐛 Bug Fixes
