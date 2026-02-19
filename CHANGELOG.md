@@ -1,3 +1,15 @@
+## [0.2.0](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.5...v0.2.0) (2026-02-19)
+
+### 🚀 Features
+
+* implement throttling support for HTTP requests and update German translations ([9f562f5](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/9f562f521fdce9c6314072a24f2973122c661f00))
+
+### 🐛 Bug Fixes
+
+* **ci:** disable artifact upload for publish jobs ([773ca5b](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/773ca5b48fdf82cea28aec25197b022d07d40705))
+* reduce default wait time and max throttle retries in HttpRequestThrottled ([8e17cfb](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/8e17cfb05d61f1e12fc486e1c97efd05e1654d58))
+* update icon for HttpRequestThrottled node ([489cade](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/489cade33be933e306cc7e0696af87e26ebbbf48))
+
 ## [0.1.5](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.4...v0.1.5) (2026-02-19)
 
 ### 🐛 Bug Fixes
