@@ -10,7 +10,9 @@
   "main": "dist/nodes/HttpRequest/HttpRequestThrottled.node.js",
   "n8n": {
     "nodes": [
-      { "file": "dist/nodes/HttpRequest/HttpRequestThrottled.node.js" }
+      {
+        "file": "dist/nodes/HttpRequest/HttpRequestThrottled.node.js"
+      }
     ]
   },
   "files": [
@@ -47,9 +49,16 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/test/**/*.test.ts"],
+    "testMatch": [
+      "**/test/**/*.test.ts"
+    ],
     "transform": {
-      "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.test.json" }]
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
     }
   }
 }
