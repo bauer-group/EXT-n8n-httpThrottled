@@ -45,7 +45,7 @@ jobs:
       test-coverage: true
       coverage-threshold: 80
       run-audit: true
-      audit-level: 'moderate'
+      audit-level: 'critical'
       upload-artifacts: true
     secrets: inherit
 
