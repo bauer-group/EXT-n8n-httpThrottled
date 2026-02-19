@@ -1,0 +1,109 @@
+# =============================================================================
+# Node.js NPM Package Release Workflow
+# =============================================================================
+# Builds, tests, and publishes the n8n community node to NPM and GitHub Packages
+# Uses semantic-release for automated versioning based on conventional commits
+# =============================================================================
+
+name: 🚀 Release & NPM Publish
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/**'
+      - '*.md'
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      force-release:
+        description: 'force create release'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+  id-token: write
+
+jobs:
+  # ============================================
+  # Build & Test
+  # ============================================
+
+  test-and-build:
+    name: 🧪 Build & Test
+    uses: bauer-group/automation-templates/.github/workflows/nodejs-build.yml@main
+    with:
+      node-version: '24.x'
+      package-manager: 'npm'
+      frozen-lockfile: true
+      build-command: 'npm run build'
+      run-tests: true
+      test-coverage: true
+      coverage-threshold: 80
+      run-audit: true
+      audit-level: 'moderate'
+      upload-artifacts: true
+    secrets: inherit
+
+  # ============================================
+  # Semantic Release (only on main branch push)
+  # ============================================
+
+  release:
+    name: 📦 Create Semantic Release
+    needs: [test-and-build]
+    if: |
+      needs.test-and-build.result == 'success'
+    uses: bauer-group/automation-templates/.github/workflows/modules-semantic-release.yml@main
+    with:
+      target-branch: 'main'
+      dry-run: false
+      force-release: ${{ inputs.force-release || false }}
+      extra-plugins: '@semantic-release/npm'
+    secrets: inherit
+
+  # ============================================
+  # Publish to NPM Registry
+  # ============================================
+
+  publish-npm:
+    name: 📤 Publish to NPM
+    needs: release
+    if: needs.release.outputs.release-created == 'true'
+    uses: bauer-group/automation-templates/.github/workflows/nodejs-build.yml@main
+    with:
+      node-version: '24.x'
+      package-manager: 'npm'
+      build-command: 'npm run build'
+      publish-package: true
+      publish-registry: 'npm'
+      publish-tag: 'latest'
+      publish-access: 'public'
+      version: ${{ needs.release.outputs.version }}
+      dry-run: false
+    secrets: inherit
+
+  # ============================================
+  # Publish to GitHub Packages
+  # ============================================
+
+  publish-github:
+    name: 📤 Publish to GitHub Packages
+    needs: release
+    if: needs.release.outputs.release-created == 'true'
+    uses: bauer-group/automation-templates/.github/workflows/nodejs-build.yml@main
+    with:
+      node-version: '24.x'
+      package-manager: 'npm'
+      build-command: 'npm run build'
+      publish-package: true
+      publish-registry: 'github'
+      registry-url: 'https://npm.pkg.github.com'
+      publish-tag: 'latest'
+      version: ${{ needs.release.outputs.version }}
+      dry-run: false
+    secrets: inherit

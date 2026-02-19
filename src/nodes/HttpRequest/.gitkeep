@@ -1,0 +1,2 @@
+# This file ensures the directory is tracked by git
+# The actual node files (HttpRequestThrottled.node.ts, throttling.ts) will be added in subsequent subtasks

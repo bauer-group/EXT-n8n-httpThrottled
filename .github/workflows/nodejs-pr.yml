@@ -1,0 +1,33 @@
+# =============================================================================
+# Node.js PR Validation Workflow
+# =============================================================================
+# Runs build, tests, and security audit on pull requests to main branch
+# =============================================================================
+
+name: 🔍 PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: 🧪 Build & Test
+    uses: bauer-group/automation-templates/.github/workflows/nodejs-build.yml@main
+    with:
+      node-version: '24.x'
+      package-manager: 'npm'
+      frozen-lockfile: true
+      build-command: 'npm run build'
+      run-tests: true
+      test-coverage: true
+      coverage-threshold: 80
+      run-audit: true
+      audit-level: 'moderate'
+      upload-artifacts: false
+    secrets: inherit
