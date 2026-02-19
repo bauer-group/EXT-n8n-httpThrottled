@@ -21,6 +21,13 @@
     "README.md",
     "LICENSE"
   ],
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "http",
+    "throttling",
+    "rate-limit"
+  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
