@@ -34,7 +34,7 @@ export const throttlingProperties: INodeProperties[] = [
         displayName: "Default Wait Time (ms)",
         name: "defaultWaitMs",
         type: "number",
-        default: 10_000,
+        default: 5_000,
         description:
           "Wait time in milliseconds when no response header provides guidance",
       },
@@ -50,7 +50,7 @@ export const throttlingProperties: INodeProperties[] = [
         displayName: "Max Throttle Retries",
         name: "maxThrottleTries",
         type: "number",
-        default: 10,
+        default: 5,
         description:
           "Maximum number of throttling retries before throwing an error",
       },

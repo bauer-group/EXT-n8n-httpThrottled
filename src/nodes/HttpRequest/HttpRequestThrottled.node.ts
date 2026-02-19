@@ -99,9 +99,9 @@ function readThrottleConfig(ctx: IExecuteFunctions): ThrottleConfig {
 
   return {
     codes: new Set((throttlingParams.throttleCodes ?? ["429"]).map(String)),
-    defaultWaitMs: throttlingParams.defaultWaitMs ?? 10_000,
+    defaultWaitMs: throttlingParams.defaultWaitMs ?? 5_000,
     jitterPercent: throttlingParams.jitterPercent ?? 25,
-    maxRetries: Math.max(1, throttlingParams.maxThrottleTries ?? 10),
+    maxRetries: Math.max(1, throttlingParams.maxThrottleTries ?? 5),
   };
 }
 
@@ -173,9 +173,9 @@ async function fallbackExecute(
     const throttleCodes = new Set(
       (throttlingParams.throttleCodes ?? ["429"]).map(String),
     );
-    const defaultWaitMs = throttlingParams.defaultWaitMs ?? 10_000;
+    const defaultWaitMs = throttlingParams.defaultWaitMs ?? 5_000;
     const jitterPercent = throttlingParams.jitterPercent ?? 25;
-    const maxThrottleTries = Math.max(1, throttlingParams.maxThrottleTries ?? 10);
+    const maxThrottleTries = Math.max(1, throttlingParams.maxThrottleTries ?? 5);
 
     const method = this.getNodeParameter("method", itemIndex, "GET") as string;
     const url = this.getNodeParameter("url", itemIndex) as string;
