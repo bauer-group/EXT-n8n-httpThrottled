@@ -69,25 +69,27 @@ services:
 
 ### Node Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| **Method** | Options | GET | HTTP method (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS) |
-| **URL** | String | — | Target URL for the request |
-| **Authentication** | Options | None | Authentication type (None, Basic Auth, Header Auth, OAuth1, OAuth2) |
-| **Send Headers** | Boolean | false | Enable custom request headers |
-| **Send Body** | Boolean | false | Enable request body |
-| **Enable Throttling** | Boolean | true | Enable automatic rate-limit handling |
+This node inherits **all** parameters from the built-in HTTP Request node (V3), including:
+
+- All HTTP methods, URL, authentication (50+ credential types), headers, query parameters, body options
+- Response format, pagination, proxy, timeout, SSL, redirect, and batching settings
+
+In addition, the following throttling parameter is appended:
+
+| Parameter              | Type    | Default | Description                          |
+| ---------------------- | ------- | ------- | ------------------------------------ |
+| **Enable Throttling**  | Boolean | true    | Enable automatic rate-limit handling |
 
 ### Throttling Settings
 
 When throttling is enabled, the following settings become available under *Throttling Settings*:
 
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| **HTTP Codes** | Multi-select | 429 | Status codes that trigger throttling (429, 503, 504) |
-| **Default Wait Time (ms)** | Number | 10000 | Wait time when no response header provides guidance |
-| **Random Jitter (±%)** | Number | 25 | Jitter percentage to prevent thundering herd |
-| **Max Throttle Retries** | Number | 10 | Maximum retry attempts before failing |
+| Setting                      | Type         | Default | Description                                          |
+| ---------------------------- | ------------ | ------- | ---------------------------------------------------- |
+| **HTTP Codes**               | Multi-select | 429     | Status codes that trigger throttling (429, 503, 504) |
+| **Default Wait Time (ms)**   | Number       | 5000    | Wait time when no response header provides guidance  |
+| **Random Jitter (±%)**       | Number       | 25      | Jitter percentage to prevent thundering herd         |
+| **Max Throttle Retries**     | Number       | 5       | Maximum retry attempts before failing                |
 
 ## How It Works
 
@@ -103,13 +105,13 @@ When the node receives a response with a configured throttle status code, it:
 
 The wait time is determined using this priority (highest first):
 
-| Priority | Source | Example |
-| -------- | ------ | ------- |
-| 1 | `Retry-After` (seconds) | `Retry-After: 30` |
-| 1 | `Retry-After` (HTTP-Date) | `Retry-After: Wed, 19 Feb 2025 12:00:00 GMT` |
-| 2 | `X-RateLimit-Remaining: 0` + reset timestamp | `X-RateLimit-Reset: 1739966400` |
-| 3 | Reset timestamp alone | `X-RateLimit-Reset: 1739966400` |
-| 4 | Default fallback | Configured *Default Wait Time* |
+| Priority | Source                                        | Example                                       |
+| -------- | --------------------------------------------- | --------------------------------------------- |
+| 1        | `Retry-After` (seconds)                       | `Retry-After: 30`                             |
+| 1        | `Retry-After` (HTTP-Date)                     | `Retry-After: Wed, 19 Feb 2025 12:00:00 GMT`  |
+| 2        | `X-RateLimit-Remaining: 0` + reset timestamp  | `X-RateLimit-Reset: 1739966400`               |
+| 3        | Reset timestamp alone                         | `X-RateLimit-Reset: 1739966400`               |
+| 4        | Default fallback                              | Configured *Default Wait Time*                |
 
 ### Supported Headers
 
@@ -136,7 +138,7 @@ The wait time is determined using this priority (highest first):
 ### API with Rate Limits (e.g. HubSpot, GitHub, Stripe)
 
 1. Enable throttling with appropriate HTTP codes (429, 503)
-2. Set a reasonable default wait time (e.g. 10,000 ms)
+2. Set a reasonable default wait time (e.g. 5,000 ms)
 3. Configure max retries based on your workflow timeout
 4. Add jitter (25%) to distribute retry attempts
 
@@ -166,8 +168,12 @@ npm test -- --coverage
 ├── src/
 │   └── nodes/
 │       └── HttpRequest/
-│           ├── HttpRequestThrottled.node.ts   # Main node implementation
-│           └── throttling.ts                  # Throttling logic
+│           ├── HttpRequestThrottled.node.ts   # Main node (V3 composition + fallback)
+│           ├── v3-loader.ts                   # Dynamic V3 node loader
+│           ├── throttle-wrapper.ts            # Helper interception for throttling
+│           ├── throttling.ts                  # Wait time calculation logic
+│           ├── throttling-props.ts            # Throttling UI properties
+│           └── translations/de/               # German translation
 ├── test/
 │   └── throttling.test.ts                     # Unit tests
 ├── package.json
