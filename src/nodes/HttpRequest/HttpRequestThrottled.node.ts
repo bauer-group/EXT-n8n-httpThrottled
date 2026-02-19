@@ -118,6 +118,7 @@ export class HttpRequestThrottled implements INodeType {
         name: "httpRequestThrottled",
         displayName: "HTTP Request (Throttled)",
         icon: "fa:globe" as const,
+        version: 1,
         defaults: { name: "HTTP Request (Throttled)", color: "#FF8500" },
         properties: [
           ...v3Ref.description.properties,
