@@ -1,3 +1,9 @@
+## [0.1.1](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.0...v0.1.1) (2026-02-19)
+
+### 🐛 Bug Fixes
+
+* revert version number to 0.0.0 in package.json ([0bd1198](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/0bd1198162bd11007adb604c715e30dd11f995ca))
+
 ## [0.1.0](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.0.0...v0.1.0) (2026-02-19)
 
 ### 🚀 Features
