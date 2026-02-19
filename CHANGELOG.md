@@ -1,3 +1,10 @@
+## [0.1.5](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.4...v0.1.5) (2026-02-19)
+
+### 🐛 Bug Fixes
+
+* disable test and audit runs in release workflow ([5c4f94d](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/5c4f94da399a143c8a41c8be958eb3a67dfa309b))
+* update German translations and improve property names in HttpRequestThrottled ([2dccf46](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/2dccf46cc5fb2d1eab10948318c9e6caff6a409d))
+
 ## [0.1.4](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.1.3...v0.1.4) (2026-02-19)
 
 ### 🐛 Bug Fixes
