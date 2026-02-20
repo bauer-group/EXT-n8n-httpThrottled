@@ -1,3 +1,9 @@
+## [0.3.3](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.2...v0.3.3) (2026-02-20)
+
+### 🐛 Bug Fixes
+
+* implement property filtering for latest V3 version in HttpRequestThrottled ([1a81562](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/1a81562c904ffa40f310f20a9e56b016df45cb3e))
+
 ## [0.3.2](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.1...v0.3.2) (2026-02-20)
 
 ### 🐛 Bug Fixes
