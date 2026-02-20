@@ -86,19 +86,18 @@ The wait time is determined by response headers (see [How It Works](how-it-works
 
 **Symptom:** The package installs but doesn't work in Docker.
 
-When using `N8N_COMMUNITY_PACKAGES`:
-```yaml
-environment:
-  - N8N_COMMUNITY_PACKAGES=@bauer-group/n8n-nodes-http-throttled-request
+Ensure your custom Dockerfile installs the package globally:
+
+```dockerfile
+FROM n8nio/n8n:latest
+USER root
+RUN npm install -g @bauer-group/n8n-nodes-http-throttled-request
+USER node
 ```
 
-Ensure:
-1. The container has internet access to download the package from npm
-2. The n8n image version supports community packages
-3. The package name is spelled correctly (scoped: `@bauer-group/...`)
+Check:
 
-When mounting as a volume, use the correct path:
-```yaml
-volumes:
-  - ./node_modules/@bauer-group/n8n-nodes-http-throttled-request:/home/node/.n8n/nodes/@bauer-group/n8n-nodes-http-throttled-request
-```
+1. The `docker build` completed without errors
+2. The package name is spelled correctly (scoped: `@bauer-group/...`)
+3. The container had internet access during build to download from npm
+4. You're using the custom image (`build: .`), not the stock `image: n8nio/n8n`

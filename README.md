@@ -1,5 +1,9 @@
 # @bauer-group/n8n-nodes-http-throttled-request
 
+[![🚀 Release & NPM Publish](https://github.com/bauer-group/EXT-n8n-httpThrottled/actions/workflows/nodejs-release.yml/badge.svg)](https://github.com/bauer-group/EXT-n8n-httpThrottled/actions/workflows/nodejs-release.yml)
+[![npm](https://img.shields.io/npm/v/@bauer-group/n8n-nodes-http-throttled-request)](https://www.npmjs.com/package/@bauer-group/n8n-nodes-http-throttled-request)
+[![GitHub package](https://img.shields.io/github/v/release/bauer-group/EXT-n8n-httpThrottled)](https://github.com/bauer-group/EXT-n8n-httpThrottled/releases)
+
 An n8n community node that adds intelligent rate-limit throttling to HTTP requests. It automatically detects rate-limit responses (HTTP 429, 503, 504) and waits the appropriate time before retrying, using information from response headers.
 
 ## Features
@@ -24,12 +28,30 @@ The node appears immediately in the node panel — no restart required.
 
 ### Docker
 
+Create a custom Dockerfile that pre-installs the package:
+
+```dockerfile
+FROM n8nio/n8n:latest
+USER root
+RUN npm install -g @bauer-group/n8n-nodes-http-throttled-request
+USER node
+```
+
+Then build and run:
+
+```bash
+docker build -t n8n-throttled .
+docker run -it --rm -p 5678:5678 n8n-throttled
+```
+
+Or with docker-compose — replace `image` with `build`:
+
 ```yaml
 services:
   n8n:
-    image: n8nio/n8n
-    environment:
-      - N8N_COMMUNITY_PACKAGES=@bauer-group/n8n-nodes-http-throttled-request
+    build: .
+    ports:
+      - "5678:5678"
 ```
 
 ## Quick Start
