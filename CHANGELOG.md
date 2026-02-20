@@ -1,3 +1,9 @@
+## [0.3.2](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.1...v0.3.2) (2026-02-20)
+
+### 🐛 Bug Fixes
+
+* enhance V3 node description handling in HttpRequestThrottled to prevent conflicts ([05db199](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/05db1991cc812242148933764895f2fc2241c1d6))
+
 ## [0.3.1](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.0...v0.3.1) (2026-02-20)
 
 ### 🐛 Bug Fixes
