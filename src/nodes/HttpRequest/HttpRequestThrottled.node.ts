@@ -13,9 +13,16 @@ import { wrapHelpersWithThrottling, type ThrottleConfig } from "./throttle-wrapp
 import { throttlingProperties } from "./throttling-props";
 import { computeWaitMs, applyJitter } from "./throttling";
 
-// ── V3 node loading (runs once at module load) ────────────────────────────────
+// ── V3 node loading (lazy – deferred until first class instantiation) ────────
 
-const v3Ref: V3NodeRef | null = loadV3Node();
+let v3Ref: V3NodeRef | null | undefined; // undefined = not yet attempted
+
+function getV3Ref(): V3NodeRef | null {
+  if (v3Ref === undefined) {
+    v3Ref = loadV3Node();
+  }
+  return v3Ref;
+}
 
 // ── Fallback description (used when n8n-nodes-base is not available) ──────────
 
@@ -111,17 +118,26 @@ export class HttpRequestThrottled implements INodeType {
   description: INodeTypeDescription;
 
   constructor() {
-    if (v3Ref) {
-      // Inherit everything from V3, override identity + append throttling
+    const v3 = getV3Ref();
+    if (v3) {
+      // Only take properties + credentials from V3.
+      // Do NOT spread the full description — internal fields like codex,
+      // routing, requestDefaults break community node loading in n8n.
       this.description = {
-        ...v3Ref.description,
         name: "httpRequestThrottled",
         displayName: "HTTP Request (Throttled)",
         icon: "fa:globe" as const,
         version: 1,
+        group: ["output"],
+        subtitle: '={{$parameter["method"] + ": " + $parameter["url"]}}',
+        description:
+          "Makes an HTTP request with automatic rate-limit throttling",
         defaults: { name: "HTTP Request (Throttled)", color: "#FF8500" },
+        inputs: ["main"],
+        outputs: ["main"],
+        credentials: v3.description.credentials,
         properties: [
-          ...v3Ref.description.properties,
+          ...v3.description.properties,
           ...throttlingProperties,
         ],
       };
@@ -139,12 +155,13 @@ export class HttpRequestThrottled implements INodeType {
     }
 
     // ── V3 path: delegate to the original node with throttled helpers ──────
-    if (v3Ref?.execute) {
+    const v3 = getV3Ref();
+    if (v3?.execute) {
       if (throttlingEnabled) {
         const config = readThrottleConfig(this);
         wrapHelpersWithThrottling(this, config);
       }
-      return (await v3Ref.execute.call(this)) as INodeExecutionData[][];
+      return (await v3.execute.call(this)) as INodeExecutionData[][];
     }
 
     // ── Fallback path: minimal implementation ─────────────────────────────
