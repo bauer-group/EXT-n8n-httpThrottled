@@ -3,6 +3,7 @@ import type {
   INodeExecutionData,
   INodeType,
   INodeTypeDescription,
+  INodeProperties,
   IHttpRequestOptions,
   IDataObject,
 } from "n8n-workflow";
@@ -12,6 +13,74 @@ import { loadV3Node, type V3NodeRef } from "./v3-loader";
 import { wrapHelpersWithThrottling, type ThrottleConfig } from "./throttle-wrapper";
 import { throttlingProperties } from "./throttling-props";
 import { computeWaitMs, applyJitter } from "./throttling";
+
+// ── Filter properties to latest V3 version ───────────────────────────────────
+// V3 contains properties for MULTIPLE sub-versions (3, 3.1, 4, 4.1, …).
+// Duplicate properties exist for different versions (e.g. two "method" defs).
+// We filter to keep ONLY properties visible at the latest version, then strip
+// the @version gate so they work with our version: 1 (DB requires integer).
+
+function filterToVersion(
+  properties: INodeProperties[],
+  targetVersion: number,
+): INodeProperties[] {
+  return properties
+    .filter((prop) => {
+      const showVersions = prop.displayOptions?.show?.["@version"];
+      const hideVersions = prop.displayOptions?.hide?.["@version"];
+
+      // No version gate → visible in all versions, keep it
+      if (!showVersions && !hideVersions) return true;
+
+      // show @version: keep only if targetVersion is in the list
+      if (showVersions && Array.isArray(showVersions)) {
+        if (!showVersions.includes(targetVersion)) return false;
+      }
+
+      // hide @version: discard if targetVersion is in the list
+      if (hideVersions && Array.isArray(hideVersions)) {
+        if (hideVersions.includes(targetVersion)) return false;
+      }
+
+      return true;
+    })
+    .map((prop) => {
+      // Strip @version from kept properties (our node is version 1)
+      const p = { ...prop };
+      if (p.displayOptions) {
+        p.displayOptions = { ...p.displayOptions };
+        if (p.displayOptions.show?.["@version"]) {
+          p.displayOptions.show = { ...p.displayOptions.show };
+          delete p.displayOptions.show["@version"];
+          if (Object.keys(p.displayOptions.show).length === 0) {
+            delete p.displayOptions.show;
+          }
+        }
+        if (p.displayOptions.hide?.["@version"]) {
+          p.displayOptions.hide = { ...p.displayOptions.hide };
+          delete p.displayOptions.hide["@version"];
+          if (Object.keys(p.displayOptions.hide).length === 0) {
+            delete p.displayOptions.hide;
+          }
+        }
+        if (!p.displayOptions.show && !p.displayOptions.hide) {
+          delete p.displayOptions;
+        }
+      }
+
+      // Recurse into fixedCollection / collection values
+      if (p.options) {
+        p.options = p.options.map((opt: any) => {
+          if (opt.values && Array.isArray(opt.values)) {
+            return { ...opt, values: filterToVersion(opt.values, targetVersion) };
+          }
+          return opt;
+        });
+      }
+
+      return p;
+    });
+}
 
 // ── V3 node loading (lazy – deferred until first class instantiation) ────────
 
@@ -120,24 +189,33 @@ export class HttpRequestThrottled implements INodeType {
   constructor() {
     const v3 = getV3Ref();
     if (v3) {
-      // Spread V3's full description to inherit routing, requestDefaults,
-      // credentials, properties, etc. Override only identity fields.
-      // codex must be removed — its aliases conflict with the built-in
-      // HTTP Request node and can crash community node loading.
-      const desc = {
-        ...v3.description,
-        name: "httpRequestThrottled" as const,
+      // Copy only properties + credentials from V3 (safe for community nodes).
+      // Strip @version display gates so all V3 features are visible at version 1.
+      this.description = {
+        name: "httpRequestThrottled",
         displayName: "HTTP Request (Throttled)",
         icon: "fa:globe" as const,
         version: 1,
+        group: ["output"],
+        subtitle: '={{$parameter["method"] + ": " + $parameter["url"]}}',
+        description:
+          "Makes an HTTP request with automatic rate-limit throttling",
         defaults: { name: "HTTP Request (Throttled)", color: "#FF8500" },
+        inputs: ["main"],
+        outputs: ["main"],
+        credentials: v3.description.credentials,
         properties: [
-          ...v3.description.properties,
+          ...filterToVersion(
+            v3.description.properties,
+            Math.max(
+              ...(Array.isArray(v3.description.version)
+                ? v3.description.version
+                : [v3.description.version]),
+            ),
+          ),
           ...throttlingProperties,
         ],
       };
-      delete (desc as Record<string, unknown>).codex;
-      this.description = desc as INodeTypeDescription;
     } else {
       this.description = fallbackDescription;
     }
