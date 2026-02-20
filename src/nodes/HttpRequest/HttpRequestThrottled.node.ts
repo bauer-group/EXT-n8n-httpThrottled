@@ -120,27 +120,24 @@ export class HttpRequestThrottled implements INodeType {
   constructor() {
     const v3 = getV3Ref();
     if (v3) {
-      // Only take properties + credentials from V3.
-      // Do NOT spread the full description — internal fields like codex,
-      // routing, requestDefaults break community node loading in n8n.
-      this.description = {
-        name: "httpRequestThrottled",
+      // Spread V3's full description to inherit routing, requestDefaults,
+      // credentials, properties, etc. Override only identity fields.
+      // codex must be removed — its aliases conflict with the built-in
+      // HTTP Request node and can crash community node loading.
+      const desc = {
+        ...v3.description,
+        name: "httpRequestThrottled" as const,
         displayName: "HTTP Request (Throttled)",
         icon: "fa:globe" as const,
         version: 1,
-        group: ["output"],
-        subtitle: '={{$parameter["method"] + ": " + $parameter["url"]}}',
-        description:
-          "Makes an HTTP request with automatic rate-limit throttling",
         defaults: { name: "HTTP Request (Throttled)", color: "#FF8500" },
-        inputs: ["main"],
-        outputs: ["main"],
-        credentials: v3.description.credentials,
         properties: [
           ...v3.description.properties,
           ...throttlingProperties,
         ],
       };
+      delete (desc as Record<string, unknown>).codex;
+      this.description = desc as INodeTypeDescription;
     } else {
       this.description = fallbackDescription;
     }
