@@ -1,3 +1,9 @@
+## [0.3.1](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.0...v0.3.1) (2026-02-20)
+
+### 🐛 Bug Fixes
+
+* improve lazy loading of V3 node in HttpRequestThrottled ([f8677b6](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/f8677b6640ef44b36203ef60bbf4f748cca4456e))
+
 ## [0.3.0](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.2.0...v0.3.0) (2026-02-19)
 
 ### 🚀 Features
