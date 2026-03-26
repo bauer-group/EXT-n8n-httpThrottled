@@ -1,3 +1,9 @@
+## [0.3.4](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.3...v0.3.4) (2026-03-26)
+
+### 🐛 Bug Fixes
+
+* **ci:** limit security audit to production dependencies only ([b941b85](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/b941b85177a79875aa1b913a0af12bdeaeba3364))
+
 ## [0.3.3](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.2...v0.3.3) (2026-02-20)
 
 ### 🐛 Bug Fixes
