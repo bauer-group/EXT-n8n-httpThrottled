@@ -43,7 +43,7 @@
     "n8n-core": ">=2.9.0 <3"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "@types/node": "^25.3.0",
     "jest": "^30.2.0",
     "@types/jest": "^30.0.0",
