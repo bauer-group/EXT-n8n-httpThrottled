@@ -17,7 +17,14 @@ export function normalizeHeaders(
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(raw ?? {})) {
     if (v == null) continue;
-    out[k.toLowerCase()] = Array.isArray(v) ? String(v[0]) : String(v);
+    if (Array.isArray(v)) {
+      // Empty multi-value header (or null first element) → skip instead of
+      // emitting the literal string "undefined" via String(undefined).
+      if (v.length === 0 || v[0] == null) continue;
+      out[k.toLowerCase()] = String(v[0]);
+    } else {
+      out[k.toLowerCase()] = String(v);
+    }
   }
   return out;
 }

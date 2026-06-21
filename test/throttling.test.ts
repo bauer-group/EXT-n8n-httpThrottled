@@ -26,6 +26,11 @@ describe("normalizeHeaders", () => {
     const result = normalizeHeaders({ "retry-after": null as unknown as string });
     expect(result["retry-after"]).toBeUndefined();
   });
+
+  it("überspringt leere Array-Werte statt 'undefined' zu erzeugen", () => {
+    const result = normalizeHeaders({ "retry-after": [] as unknown as string });
+    expect(result["retry-after"]).toBeUndefined();
+  });
 });
 
 // ── parseRetryAfterToMs ───────────────────────────────────────────────────────
