@@ -1,3 +1,9 @@
+## [0.3.6](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.5...v0.3.6) (2026-06-21)
+
+### 🐛 Bug Fixes
+
+* **node:** made node compliant with n8n community-node verification ([1bea970](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/1bea970add38afd0a7470b11c0206f04474f202f))
+
 ## [0.3.5](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.4...v0.3.5) (2026-06-21)
 
 ### 🐛 Bug Fixes
