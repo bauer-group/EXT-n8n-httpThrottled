@@ -1,3 +1,9 @@
+## [0.3.5](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.4...v0.3.5) (2026-06-21)
+
+### 🐛 Bug Fixes
+
+* **throttling:** skipped empty multi-value headers in normalizeHeaders ([cb583a4](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/cb583a4bf1283ebe34af10798c27fd2758e1395f))
+
 ## [0.3.4](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.3...v0.3.4) (2026-03-26)
 
 ### 🐛 Bug Fixes
