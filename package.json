@@ -36,6 +36,7 @@
     "build": "tsc -p tsconfig.json && cp -r src/nodes/HttpRequest/translations dist/nodes/HttpRequest/",
     "rebuild": "npm run clean && npm run build",
     "test": "jest",
+    "scan": "npm run build && node scripts/scan.mjs",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {},
@@ -43,6 +44,7 @@
     "n8n-workflow": "*"
   },
   "devDependencies": {
+    "@n8n/scan-community-package": "^0.22.0",
     "typescript": "^6.0.3",
     "@types/node": "^26.0.0",
     "jest": "^30.4.2",
