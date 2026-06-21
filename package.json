@@ -50,7 +50,7 @@
     "jest": "^30.4.2",
     "@types/jest": "^30.0.0",
     "ts-jest": "^29.4.11",
-    "n8n-workflow": "~2.26.3",
+    "n8n-workflow": "~2.27.1",
     "n8n-core": "~2.26.4",
     "rimraf": "^6.1.3"
   }
