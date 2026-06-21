@@ -7,7 +7,7 @@ import type {
   IHttpRequestOptions,
   IDataObject,
 } from "n8n-workflow";
-import { NodeOperationError, NodeApiError } from "n8n-workflow";
+import { NodeOperationError, NodeApiError, sleep } from "n8n-workflow";
 
 import { loadV3Node, type V3NodeRef } from "./v3-loader";
 import { wrapHelpersWithThrottling, type ThrottleConfig } from "./throttle-wrapper";
@@ -160,9 +160,6 @@ const fallbackDescription: INodeTypeDescription = {
 };
 
 // ── Helper ────────────────────────────────────────────────────────────────────
-
-const sleep = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
 
 function readThrottleConfig(ctx: IExecuteFunctions): ThrottleConfig {
   // Read from first item — throttling config applies to the entire execution

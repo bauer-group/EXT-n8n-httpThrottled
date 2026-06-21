@@ -2,7 +2,7 @@ import type {
   IExecuteFunctions,
   IHttpRequestOptions,
 } from "n8n-workflow";
-import { NodeOperationError } from "n8n-workflow";
+import { NodeOperationError, sleep } from "n8n-workflow";
 import { computeWaitMs, applyJitter } from "./throttling";
 
 export interface ThrottleConfig {
@@ -11,9 +11,6 @@ export interface ThrottleConfig {
   jitterPercent: number;
   maxRetries: number;
 }
-
-const sleep = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Wraps `this.helpers.httpRequest` and `this.helpers.httpRequestWithAuthentication`
