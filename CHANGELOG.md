@@ -1,3 +1,23 @@
+# Changelog
+
+All notable changes to this project are documented here. This file is maintained
+automatically by [semantic-release](https://github.com/semantic-release/semantic-release)
+on every release to `main`.
+
+## [0.3.7](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.6...v0.3.7) (2026-10-10)
+
+### 🐛 Bug Fixes
+
+* **ci:** added the missing permissions block ([c6e0c0c](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/c6e0c0c02b00702dc0ef4dd0b112bee0e7e6f83c))
+* **deps:** resolved 36 Dependabot alerts in transitive dev deps ([60f1a0b](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/60f1a0b3ed0db4e9d7ec0c6e82472e62d363bfec)), references [50/#51](https://github.com/bauer-group/EXT-n8n-httpThrottled/issues/51)
+
+### 🔧 Maintenance
+
+* **ci:** removed issue AI summary workflow ([abf3195](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/abf3195b6174a403e18e87704fe1bc15b4d09713)), references [bauer-group/automation-templates#105](https://github.com/bauer-group/automation-templates/issues/105)
+* **ci:** removed redundant teams notification ([d2bb675](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/d2bb675395a7c85a8f16025ac13963fc09d19285))
+* **codeowners:** reassigned ownership to core team [skip ci] ([0cd2aa3](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/0cd2aa3c0819d1a92ca0f2f4224386f56b7484aa))
+* **scan:** added local n8n verification scan command ([cdee5b7](https://github.com/bauer-group/EXT-n8n-httpThrottled/commit/cdee5b7cef4711239eea18e24d7a5b263b07c2cd))
+
 ## [0.3.6](https://github.com/bauer-group/EXT-n8n-httpThrottled/compare/v0.3.5...v0.3.6) (2026-06-21)
 
 ### 🐛 Bug Fixes
