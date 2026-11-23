@@ -38,3 +38,23 @@ updates:
       - "dependabot"
     commit-message:
       prefix: "chore(deps)"
+    groups:
+      # n8n-core and n8n-workflow are published in lock-step and both pin the
+      # same exact zod peer (e.g. zod@3.25.76). Bumping one without the other
+      # fails `npm ci` with ERESOLVE, so they must always move together.
+      n8n:
+        patterns:
+          - "n8n-core"
+          - "n8n-workflow"
+    ignore:
+      # n8n 3.x libraries are only on the npm `rc` dist-tag; the n8n app
+      # (latest 2.48.x) still ships n8n-workflow 2.x, which is what this node
+      # runs against. Remove once n8n 3.0 is released as `latest`.
+      - dependency-name: "n8n-core"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "n8n-workflow"
+        update-types: ["version-update:semver-major"]
+      # ts-jest (latest 29.4.15) peers typescript <7 and does not support
+      # the TypeScript 7 native compiler API. Remove once it does.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
