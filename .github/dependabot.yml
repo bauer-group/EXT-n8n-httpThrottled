@@ -41,13 +41,24 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     groups:
+      # Every patch and minor update in one PR per run, which the auto-merge
+      # caller (dependabot-maintenance.yml) merges once nodejs-pr.yml passed.
       # n8n-core and n8n-workflow are published in lock-step and both pin the
       # same exact zod peer (e.g. zod@3.25.76). Bumping one without the other
-      # fails `npm ci` with ERESOLVE, so they must always move together.
-      n8n:
+      # fails `npm ci` with ERESOLVE; inside this catch-all group they still
+      # move together, and their majors stay ignored below.
+      # 0.x packages are excluded: below 1.0.0 a minor counts as major for
+      # the auto-merge gate, would turn the whole group major and hold it
+      # open. They arrive as PRs of their own and wait for review. Remove a
+      # package from exclude-patterns once it reaches 1.0.
+      npm-minor-and-patch:
         patterns:
-          - "n8n-core"
-          - "n8n-workflow"
+          - "*"
+        exclude-patterns:
+          - "@n8n/scan-community-package"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       # n8n 3.x libraries are only on the npm `rc` dist-tag; the n8n app
       # (latest 2.48.x) still ships n8n-workflow 2.x, which is what this node
