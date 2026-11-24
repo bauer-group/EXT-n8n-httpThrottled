@@ -1,8 +1,10 @@
 # =============================================================================
 # Dependabot Configuration
 # =============================================================================
-# Monitors Docker base images for updates
-# Combined with docker-maintenance.yml workflow for auto-merge and release
+# Monitors npm dependencies and GitHub Actions versions.
+# Combined with dependabot-maintenance.yml for auto-merge. Schedule:
+# Sunday 18:00 UTC, this repository's auto-merge step (automation-templates
+# docs/workflows/docker-maintenance.md).
 # =============================================================================
 
 version: 2
@@ -15,7 +17,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-      time: "13:30"
+      time: "18:00"
       timezone: "Etc/UTC"
     labels:
       - "dependencies"
@@ -30,7 +32,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-      time: "13:30"
+      time: "18:00"
       timezone: "Etc/UTC"
     labels:
       - "dependencies"

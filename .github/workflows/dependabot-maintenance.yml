@@ -1,0 +1,62 @@
+# =============================================================================
+# Dependabot Maintenance - EXT-n8n-httpThrottled
+# =============================================================================
+# Merges Dependabot PRs once the PR CI that builds and tests them has passed,
+# using the reusable workflow from bauer-group/automation-templates
+# (docs/workflows/docker-maintenance.md).
+#
+# Trigger scope: no `paths:` filter, so every Dependabot PR - whatever its
+# ecosystem - gets an explicit decision (merged, or left open with an
+# annotation and a job summary) instead of silently staying open.
+# - npm: Dependabot changes package.json and package-lock.json.
+#   nodejs-pr.yml runs on every pull request to main (no paths: filter):
+#   npm ci, the build, jest with 80 % coverage and npm audit - that run
+#   must pass. Every dependency is a devDependency (n8n-workflow is a
+#   peer with '*'), so no update lands in a consumer's install - but
+#   typescript compiles the dist/ that nodejs-release.yml publishes, so a
+#   compiler update does reach consumers with the next release. The build
+#   and the jest run above are what vouch for it.
+# - GitHub Actions updates and any other PR that changes .github/ are never
+#   merged automatically (guard of the reusable workflow) - merge by hand.
+#
+# Update types: patch and minor are merged (default merge-update-types),
+# majors stay open for review. Below 1.0.0 a minor (0.y.z) or 0.0.z patch
+# update counts as major, and a grouped PR counts as its strictest update,
+# so dependabot.yml keeps 0.x packages out of the minor/patch group.
+#
+# No release-workflow: dependency updates use chore(deps) and publish
+# nothing; nodejs-release.yml ships them with the next feat/fix release.
+# The merge (GITHUB_TOKEN) starts no push workflow anyway.
+#
+# Timeouts: the reusable workflow sets its own (75 min without
+# release-workflow); a job that calls a reusable workflow cannot declare
+# timeout-minutes.
+# =============================================================================
+
+name: 🤖 Dependabot Maintenance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# The reusable workflow declares no permissions of its own - the token has
+# exactly these. The three read scopes are needed in private repositories and
+# keep the workflow working should this repository ever be made private.
+permissions:
+  contents: write       # merge
+  pull-requests: write  # approve, read the PR
+  checks: read          # check runs and suites
+  statuses: read        # commit statuses
+  actions: read         # workflow runs
+
+jobs:
+  maintenance:
+    name: Auto-merge Dependabot PRs
+    uses: bauer-group/automation-templates/.github/workflows/docker-maintenance-dependabot.yml@main
+    with:
+      # The PR CI that builds and tests the update; a PR it did not run for
+      # stays open as "not tested".
+      required-workflows: .github/workflows/nodejs-pr.yml
+      merge-method: 'squash'
+      auto-approve: true
+    secrets: inherit
